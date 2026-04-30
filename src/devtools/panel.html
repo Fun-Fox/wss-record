@@ -1,0 +1,390 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行为录制回放</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div class="app-container" id="appContainer">
+    <header class="header">
+      <div class="header-left">
+        <h1 class="logo">
+          <span class="logo-icon">&#9889;</span>
+          行为录制回放
+        </h1>
+        <span class="version">v1.0.0</span>
+      </div>
+      <div class="header-right">
+        <div class="recording-status" id="recordingStatus">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="status-text" id="statusText">空闲</span>
+        </div>
+        <div class="message-count" id="messageCount">0 条消息</div>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="btn btn-primary" id="btnRecord" title="开始录制">
+          <span class="btn-icon">&#9679;</span>
+          开始录制
+        </button>
+        <button class="btn btn-danger" id="btnStop" disabled title="停止录制">
+          <span class="btn-icon">&#9632;</span>
+          停止录制
+        </button>
+        <button class="btn btn-secondary" id="btnClear" title="清空消息">
+          <span class="btn-icon">&#10005;</span>
+          清空
+        </button>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn-icon-btn" id="btnRecordingSettings" title="录制过滤设置">&#9881;</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- Left Column: Behaviors + Connections -->
+      <div class="left-column">
+        <!-- Behavior List Panel -->
+        <div class="behaviors-panel" id="behaviorsPanel">
+          <div class="panel-header">
+            <h3>行为列表</h3>
+            <span class="panel-badge" id="behaviorCount">0</span>
+          </div>
+          <div class="behaviors-list" id="behaviorsList">
+            <div class="empty-state">
+              <span class="empty-icon">&#128203;</span>
+              <p>暂无保存的行为</p>
+              <p class="empty-hint">录制后停止会自动提示保存</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connections Panel -->
+        <div class="connections-panel" id="connectionsPanel">
+          <div class="panel-header">
+            <h3>连接</h3>
+            <span class="panel-badge" id="connectionCount">0</span>
+          </div>
+          <div class="connections-list" id="connectionsList">
+            <div class="empty-state">
+              <span class="empty-icon">&#128268;</span>
+              <p>未检测到连接</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Messages + Detail -->
+      <div class="right-column">
+        <!-- Replay Status Panel -->
+        <div class="replay-panel" id="replayPanel" style="display: none;">
+          <div class="panel-header">
+            <h3>回放状态</h3>
+            <button class="btn-icon-btn" id="btnCloseReplay" title="关闭">&#10005;</button>
+          </div>
+          <div class="replay-status-body">
+            <div class="replay-info">
+              <span class="replay-label">行为:</span>
+              <span class="replay-value" id="replayBehaviorName"></span>
+            </div>
+            <div class="replay-progress-row">
+              <div class="replay-progress-bar">
+                <div class="replay-progress-fill" id="replayProgressFill"></div>
+              </div>
+              <span class="replay-progress-text" id="replayProgressText">0 / 0</span>
+            </div>
+            <div class="replay-detail-info" id="replayDetailInfo"></div>
+            <div class="replay-log" id="replayLog">
+              <div class="log-entry">准备回放</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="messages-panel" id="messagesPanel">
+          <div class="panel-header">
+            <h3>消息列表</h3>
+            <div class="panel-actions">
+              <button class="btn-icon-btn" id="btnScrollToBottom" title="滚动到底部">&#8681;</button>
+              <button class="btn-icon-btn" id="btnAutoScroll" title="切换自动滚动" active>&#128269;</button>
+            </div>
+          </div>
+          <div class="messages-table-container">
+            <table class="messages-table" id="messagesTable">
+              <thead>
+                <tr>
+                  <th class="col-time">时间</th>
+                  <th class="col-interval">间隔</th>
+                  <th class="col-direction">方向</th>
+                  <th class="col-type">类型</th>
+                  <th class="col-size">大小</th>
+                  <th class="col-data">数据</th>
+                </tr>
+              </thead>
+              <tbody id="messagesBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="detail-panel" id="detailPanel">
+          <div class="panel-header">
+            <h3>消息详情</h3>
+            <button class="btn-icon-btn" id="btnCloseDetail" title="关闭">&#10005;</button>
+          </div>
+          <div class="detail-content" id="detailContent">
+            <div class="empty-state">
+              <span class="empty-icon">&#128196;</span>
+              <p>选择一条消息查看详情</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save/Edit Behavior Modal -->
+    <div class="modal" id="saveBehaviorModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="behaviorModalTitle">保存行为</h3>
+          <button class="btn-icon-btn" id="btnCloseSaveBehavior">&#10005;</button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editBehaviorId">
+          <div class="form-group">
+            <label for="behaviorName">行为名称 <span class="required">*</span></label>
+            <input type="text" id="behaviorName" class="form-input" placeholder="输入行为名称" required>
+          </div>
+          <div class="form-group">
+            <label for="behaviorUrl">WebSocket URL</label>
+            <input type="text" id="behaviorUrl" class="form-input" placeholder="wss://example.com/ws" readonly>
+          </div>
+          <div class="form-group">
+            <label for="behaviorCookies">Cookie（可选）</label>
+            <textarea id="behaviorCookies" class="form-input form-textarea" placeholder="name1=value1; name2=value2" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="behaviorDesc">描述（可选）</label>
+            <textarea id="behaviorDesc" class="form-input form-textarea" placeholder="行为描述" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>录制连接 <span class="required">*</span></label>
+            <div class="connection-selector" id="behaviorConnections">
+              <div class="empty-state"><p>无录制消息</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btnCancelSaveBehavior">取消</button>
+          <button class="btn btn-primary" id="btnSaveBehavior">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection Selection Modal (录制前选择) -->
+    <div class="modal" id="selectConnectionModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">选择录制的 WebSocket 连接</h3>
+          <button class="btn-icon-btn" id="btnCloseSelectConnection">&#10005;</button>
+        </div>
+        <div class="modal-body">
+          <div class="info-banner">
+            <span class="info-icon">&#8505;</span>
+            <p>请选择要录制的 WebSocket 连接。录制期间只会捕获选中连接的消息。</p>
+          </div>
+          <div class="form-group">
+            <label>可用连接：</label>
+            <div class="connection-radio-list" id="connectionRadioList">
+              <div class="empty-state">
+                <span class="empty-icon">&#128268;</span>
+                <p>当前页面没有活动的 WebSocket 连接</p>
+                <p class="empty-hint">请先在页面中建立 WebSocket 连接</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btnCancelSelectConnection">取消</button>
+          <button class="btn btn-primary" id="btnConfirmRecord" disabled>开始录制</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recording Filter Settings Modal -->
+    <div class="modal" id="recordingSettingsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">录制过滤设置</h3>
+          <button class="btn-icon-btn" id="btnCloseRecordingSettings">&#10005;</button>
+        </div>
+        <div class="modal-body">
+          <div class="info-banner">
+            <span class="info-icon">&#8505;</span>
+            <p>配置录制过滤规则，这些设置将应用于所有录制会话。</p>
+          </div>
+          
+          <div class="form-group">
+            <label>消息内容过滤（可选）</label>
+            <input type="text" id="filterKeyword" class="form-input" placeholder="输入要过滤的关键词，多个关键词用逗号分隔">
+            <p class="form-hint">包含这些关键词的消息将被忽略</p>
+          </div>
+          
+          <div class="form-group">
+            <label>消息类型过滤</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="filterText" checked>
+                <span>Text 消息</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="filterJson" checked>
+                <span>JSON 消息</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="filterBinary" checked>
+                <span>Binary 消息</span>
+              </label>
+            </div>
+            <p class="form-hint">取消勾选的类型将不会被录制</p>
+          </div>
+          
+          <div class="form-group">
+            <label>URL 过滤（可选）</label>
+            <input type="text" id="filterUrlPattern" class="form-input" placeholder="输入 URL 模式，支持 * 通配符">
+            <p class="form-hint">只录制匹配此模式的 WebSocket URL，例如: wss://api.example.com/*</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btnResetFilterSettings">重置</button>
+          <button class="btn btn-primary" id="btnSaveFilterSettings">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View/Edit Behavior Detail Modal -->
+    <div class="modal" id="behaviorDetailModal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2 id="behaviorDetailTitle">行为详情</h2>
+          <button class="btn-icon-btn modal-close" id="btnCloseBehaviorDetail">&#10005;</button>
+        </div>
+        <div class="modal-body">
+          <div class="behavior-detail-header">
+            <div class="behavior-detail-name" id="detailBehaviorName"></div>
+            <div class="behavior-detail-meta">
+              <span id="detailBehaviorMessages"></span>
+              <span id="detailBehaviorDate"></span>
+            </div>
+          </div>
+          <div class="behavior-detail-actions">
+            <button class="btn btn-primary" id="btnReplayBehavior">&#9654; 回放</button>
+            <button class="btn btn-secondary" id="btnEditBehavior">&#9998; 编辑</button>
+            <button class="btn btn-outline" id="btnExportBehavior">&#8681; 导出</button>
+            <button class="btn btn-outline" id="btnImportBehavior">&#8679; 导入</button>
+            <button class="btn btn-danger" id="btnDeleteBehavior">&#10005; 删除</button>
+          </div>
+          <div class="replay-settings-container">
+            <div class="replay-settings-header">
+              <span class="replay-settings-title">回放设置</span>
+              <button class="btn btn-sm btn-primary" id="btnSaveReplaySettings">保存设置</button>
+            </div>
+            <div class="replay-repeat-row">
+              <label for="replayRepeatCount">回放次数</label>
+              <input type="number" id="replayRepeatCount" class="text-input replay-repeat-input" min="1" max="100" value="1">
+            </div>
+            <div class="replay-repeat-row">
+              <label for="replayInterval">回放间隔（秒）</label>
+              <input type="number" id="replayInterval" class="text-input replay-repeat-input" min="0" max="3600" value="0" step="0.1">
+              <span class="form-hint">每次回放之间的等待时间，0 表示无间隔</span>
+            </div>
+            <div class="replay-estimate-row">
+              <span class="estimate-label">估算总耗时:</span>
+              <span class="estimate-value" id="replayEstimateTime">-</span>
+            </div>
+          </div>
+          <div class="behavior-detail-cookies">
+            <div class="detail-section-title">Cookie</div>
+            <div class="cookie-display" id="detailCookies"></div>
+          </div>
+          <div class="behavior-detail-messages">
+            <div class="detail-section-title">
+              <span>消息序列</span>
+              <button class="btn-icon-btn-sm" id="btnAddMessage" title="添加消息">&#43;</button>
+            </div>
+            <div class="messages-sequence" id="detailMessages"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Message Modal -->
+    <div class="modal" id="editMessageModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="editMessageTitle">编辑消息</h2>
+          <button class="btn-icon-btn modal-close" id="btnCloseEditMessage">&#10005;</button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editMessageIndex">
+          <input type="hidden" id="editMessageConnId">
+          <div class="form-group">
+            <label>WebSocket URL</label>
+            <input type="text" id="editMessageUrl" class="text-input" placeholder="wss://...">
+          </div>
+          <div class="form-group">
+            <label>数据类型</label>
+            <select id="editMessageDataType" class="text-input">
+              <option value="text">Text</option>
+              <option value="json">JSON</option>
+              <option value="binary">Binary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>消息内容 <span class="required">*</span></label>
+            
+            <!-- 原始数据可读预览 -->
+            <div class="binary-raw-preview" id="binaryRawPreview" style="display: none;">
+              <div class="preview-header">
+                <span>原始数据预览</span>
+                <button class="btn-icon-btn-sm" id="btnCopyRawPreview" title="复制">&#128203;</button>
+              </div>
+              <div class="preview-content" id="rawPreviewContent"></div>
+            </div>
+            
+            <!-- 格式切换按钮 -->
+            <div class="binary-format-selector" id="binaryFormatSelector" style="display: none;">
+              <button class="btn-icon-btn-sm active" data-format="raw" title="原始文本">Raw</button>
+              <span class="binary-size" id="binarySize"></span>
+            </div>
+            
+            <textarea id="editMessageData" class="text-input textarea-cookies" rows="6" placeholder="输入消息内容"></textarea>
+            
+            <!-- Hex 预览 -->
+            <div class="binary-preview" id="binaryPreview" style="display: none;"></div>
+          </div>
+          <div class="form-group">
+            <label>延迟 (ms)</label>
+            <input type="number" id="editMessageDelay" class="text-input" min="0" value="0" placeholder="相对于前一条消息的延迟">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btnCancelEditMessage">取消</button>
+          <button class="btn btn-primary" id="btnSaveEditMessage">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">
+      <span class="toast-icon"></span>
+      <span class="toast-message"></span>
+    </div>
+  </div>
+
+  <script src="panel.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#007acc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#005fa3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="url(#bg)"/>
+  <g transform="translate(64,64)">
+    <!-- WebSocket symbol -->
+    <circle cx="0" cy="0" r="28" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <circle cx="0" cy="0" r="8" fill="#ffffff"/>
+    <!-- Connection lines -->
+    <line x1="-40" y1="-40" x2="-18" y2="-18" stroke="#4ec951" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="-40" cy="-40" r="6" fill="#4ec951"/>
+    <line x1="40" y1="-40" x2="18" y2="-18" stroke="#f44747" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="40" cy="-40" r="6" fill="#f44747"/>
+    <line x1="0" y1="45" x2="0" y2="20" stroke="#ce9178" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="45" r="6" fill="#ce9178"/>
+    <!-- Record dot -->
+    <circle cx="35" cy="35" r="10" fill="#f44747"/>
+  </g>
+</svg>

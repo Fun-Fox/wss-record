@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "行为录制回放",
+  "version": "1.0.0",
+  "description": "录制和回放 WebSocket 消息，支持设备群控场景。",
+  "permissions": [
+    "storage",
+    "webRequest",
+    "activeTab",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "devtools_page": "src/devtools/devtools.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/content-script.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "src/icons/icon-16.png",
+      "48": "src/icons/icon-48.png",
+      "128": "src/icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "src/icons/icon-16.png",
+    "48": "src/icons/icon-48.png",
+    "128": "src/icons/icon-128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["src/content/injected-script.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
