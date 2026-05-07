@@ -2,11 +2,8 @@
 
 一个用于录制和回放 WebSocket (WSS) 消息的 Chrome DevTools 扩展，专为设备群控场景设计。
 
-![](/doc/3.png)
 ![](/doc/4.png)
 ![](/doc/1.png)
-![](/doc/2.png)
-
 
 ## 功能特性
 
