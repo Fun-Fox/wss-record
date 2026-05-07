@@ -1,336 +1,347 @@
-# WSS Recorder
+# 行为录制回放
 
-A Chrome DevTools extension for recording and replaying WebSocket (WSS) messages, designed for device control scenarios.
+一个用于录制和回放 WebSocket (WSS) 消息的 Chrome DevTools 扩展，专为设备群控场景设计。
 
-## Features
+![](/doc/3.png)
+![](/doc/4.png)
+![](/doc/1.png)
+![](/doc/2.png)
 
-### 🎯 Core Functionality
 
-- **WebSocket Message Recording**: Capture all WebSocket send/receive messages in real-time
-- **Connection Filtering**: Select specific WebSocket connections to record
-- **Behavior Management**: Save recorded message sequences as reusable behaviors
-- **Message Replay**: Replay saved behaviors with configurable repeat count and interval
-- **Binary Message Support**: Full support for binary WebSocket messages with hex editing
-- **Multi-format Export**: Export behaviors as Node.js or Python scripts
+## 功能特性
 
-### 🔧 Advanced Features
+###  核心功能
 
-#### Recording Controls
-- Start/stop recording at any time
-- Filter by connection ID
-- Real-time message counter
-- Connection status indicators
+- **WebSocket 消息录制**: 实时捕获所有 WebSocket 发送消息
+- **连接筛选**: 选择特定的 WebSocket 连接进行录制
+- **行为管理**: 将录制的消息序列保存为可复用的行为
+- **消息回放**: 回放保存的行为，支持配置重复次数和间隔
+- **二进制消息支持**: 完整支持二进制 WebSocket 消息，可编辑十六进制数据
+- **多格式导出**: 将行为导出为 Node.js 或 Python 脚本
 
-#### Behavior Management
-- Create named behavior sequences
-- Edit individual messages (text and binary)
-- Delete unwanted messages
-- Clear entire behavior
-- Import/export behaviors as JSON
+###  高级功能
 
-#### Replay Configuration
-- **Repeat Count**: Set how many times to replay (1-100 times)
-- **Replay Interval**: Configure wait time between replays (0-3600 seconds)
-- **Time Estimation**: Automatic calculation of total replay duration
-- Real-time estimate updates as you change settings
+#### 录制控制
+- 随时开始/停止录制
+- 按连接 ID 筛选
+- 实时消息计数器
+- 连接状态指示器
 
-#### Message Editing
-- Text message editor with validation
-- Binary message hex editor
-- Format validation for binary data
-- Undo/redo support through save/cancel
+#### 行为管理
+- 创建命名行为序列
+- 编辑单个消息（文本和二进制）
+- 删除不需要的消息
+- 清空整个行为
+- 导入/导出行为为 JSON
 
-### 📊 UI Components
+#### 回放配置
+- **重复次数**: 设置回放次数（1-100次）
+- **回放间隔**: 配置每次回放之间的等待时间（0-3600秒）
+- **时间估算**: 自动计算总回放时长
+- 实时更新估算时间
 
-#### DevTools Panel (WSS Panel)
-- Clean, dark-themed interface
-- Connection list with status indicators
-- Message timeline view
-- Behavior detail modal
-- Replay status panel
+#### 消息编辑
+- 文本消息编辑器，带验证
+- 二进制消息十六进制编辑器
+- 二进制数据格式验证
+- 通过保存/取消支持撤销操作
 
-#### Popup Interface
-- Quick access to extension status
-- Recording state indicator
-- Instructions for accessing DevTools panel
+### 📊 界面组件
 
-## Installation
+#### DevTools 面板（行为录制回放面板）
+- 简洁的深色主题界面
+- 连接列表，带状态指示器
+- 消息时间线视图
+- 行为详情模态框
+- 回放状态面板
 
-### From Source
+#### Popup 弹窗
+- 快速访问扩展状态
+- 录制状态指示器
+- DevTools 面板使用说明
 
-1. Clone or download this repository
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable "Developer mode" (top right corner)
-4. Click "Load unpacked"
-5. Select the `wss-proxy` directory
-6. The extension icon should appear in your toolbar
+## 安装方法
 
-### Verify Installation
+### 从源码安装
 
-1. Open any webpage with WebSocket connections
-2. Press `F12` to open DevTools
-3. Look for the **"WSS Panel"** tab
-4. Click to activate the panel
+1. 克隆或下载此仓库
+2. 打开 Chrome 浏览器，访问 `chrome://extensions/`
+3. 启用"开发者模式"（右上角）
+4. 点击"加载已解压的扩展程序"
+5. 选择 `wss-record` 目录
+6. 扩展图标应出现在工具栏中
 
-## Usage Guide
+### 验证安装
 
-### Recording Messages
+1. 打开任何包含 WebSocket 连接的网页
+2. 按 `F12` 打开 DevTools
+3. 查找 **"行为录制回放"** 标签页
+4. 点击激活面板
 
-1. **Open DevTools**: Press `F12` on any webpage
-2. **Switch to WSS Panel**: Click the "WSS Panel" tab
-3. **Select Connection** (optional): Choose a specific WebSocket connection from the list
-4. **Start Recording**: Click the red "Record" button
-5. **Interact with Page**: Perform actions that trigger WebSocket messages
-6. **Stop Recording**: Click the button again to stop
+## 使用指南
 
-### Creating Behaviors
+### 录制消息
 
-1. After recording, click "Save Behavior"
-2. Enter a descriptive name for the behavior
-3. Review captured messages in the detail modal
-4. Edit or delete messages as needed
-5. Click "Save" to store the behavior
+1. **打开 DevTools**: 在任何网页上按 `F12`
+2. **切换到面板**: 点击"行为录制回放"标签页
+3. **选择连接**（可选）: 从列表中选择特定的 WebSocket 连接
+4. **开始录制**: 点击红色的"录制"按钮
+5. **与页面交互**: 执行触发 WebSocket 消息的操作
+6. **停止录制**: 再次点击按钮停止
 
-### Replaying Behaviors
+### 创建行为
 
-1. Navigate to the "Behaviors" tab
-2. Find your saved behavior
-3. Click "Replay" button
-4. Configure replay settings:
-   - **Repeat Count**: Number of times to replay (default: 1)
-   - **Replay Interval**: Wait time between replays in seconds (default: 0)
-   - **Estimated Time**: Automatically calculated based on settings
-5. Click "Start Replay"
-6. Monitor progress in the status panel
+1. 录制完成后，点击"保存行为"
+2. 输入行为的描述性名称
+3. 在详情模态框中查看捕获的消息
+4. 根据需要编辑或删除消息
+5. 点击"保存"存储行为
 
-### Exporting Scripts
+### 回放行为
 
-1. Go to "Behaviors" tab
-2. Click "Export" on desired behavior
-3. Choose format:
-   - **Node.js**: JavaScript script using `ws` library
-   - **Python**: Python script using `websockets` library
-4. Download and use the generated script
+1. 导航到"行为"标签页
+2. 找到已保存的行为
+3. 点击"回放"按钮
+4. 配置回放设置：
+   - **重复次数**: 回放次数（默认：1）
+   - **回放间隔**: 每次回放之间的等待时间（秒）（默认：0）
+   - **估算时间**: 根据设置自动计算
+5. 点击"开始回放"
+6. 在状态面板中监控进度
 
-### Managing Connections
+### 导出脚本
 
-- **View All Connections**: See all active WebSocket connections
-- **Filter by URL**: Connections are grouped by origin URL
-- **Connection Status**: Visual indicators show active/inactive states
-- **Recording Indicator**: Active recording connections are highlighted
+1. 进入"行为"标签页
+2. 点击所需行为的"导出"按钮
+3. 选择格式：
+   - **Node.js**: 使用 `ws` 库的 JavaScript 脚本
+   - **Python**: 使用 `websockets` 库的 Python 脚本
+4. 下载生成的脚本
 
-## Architecture
+### 管理连接
 
-### Project Structure
+- **查看所有连接**: 查看所有活动的 WebSocket 连接
+- **按 URL 筛选**: 连接按来源 URL 分组
+- **连接状态**: 可视化指示器显示活动/非活动状态
+- **录制指示器**: 高亮显示正在录制的连接
+
+## 架构设计
+
+### 项目结构
 
 ```
-wss-proxy/
-├── manifest.json              # Extension manifest
+wss-record/
+├── manifest.json              # 扩展清单
 ├── src/
 │   ├── background/
-│   │   └── service-worker.js  # Background service worker
+│   │   └── service-worker.js  # 后台服务工作线程
 │   ├── content/
-│   │   ├── content-script.js  # Content script injector
-│   │   └── injected-script.js # WebSocket interceptor
+│   │   ├── content-script.js  # 内容脚本注入器
+│   │   └── injected-script.js # WebSocket 拦截器
 │   ├── devtools/
-│   │   ├── devtools.html      # DevTools entry point
-│   │   ├── devtools.js        # Panel registration
-│   │   ├── panel.html         # Main panel UI
-│   │   ├── panel.css          # Panel styles
-│   │   └── panel.js           # Panel logic
+│   │   ├── devtools.html      # DevTools 入口
+│   │   ├── devtools.js        # 面板注册
+│   │   ├── panel.html         # 主面板 UI
+│   │   ├── panel.css          # 面板样式
+│   │   └── panel.js           # 面板逻辑
 │   ├── popup/
-│   │   ├── popup.html         # Popup UI
-│   │   └── popup.js           # Popup logic
-│   └── icons/                 # Extension icons
-├── templates/
-│   ├── node-ws-script.js      # Node.js export template
-│   └── python-websocket-script.py  # Python export template
-└── generate-icons.js          # Icon generation script
+│   │   ├── popup.html         # 弹窗 UI
+│   │   └── popup.js           # 弹窗逻辑
+│   └── icons/                 # 扩展图标
+└── generate-icons.js          # 图标生成脚本
 ```
 
-### Component Responsibilities
+### 组件职责
 
 #### Service Worker (`service-worker.js`)
-- Manages WebSocket connection tracking
-- Handles message storage and retrieval
-- Processes behavior save/load operations
-- Coordinates communication between components
+- 管理 WebSocket 连接跟踪
+- 处理消息存储和检索
+- 处理行为保存/加载操作
+- 协调组件间通信
 
 #### Injected Script (`injected-script.js`)
-- Intercepts WebSocket constructor
-- Captures send/receive events
-- Filters messages based on recording state
-- Forwards data to content script
+- 拦截 WebSocket 构造函数
+- 捕获发送事件（send）
+- 基于录制状态筛选消息
+- 将数据转发到内容脚本
 
 #### Content Script (`content-script.js`)
-- Injects interceptor into page context
-- Bridges page and extension contexts
-- Handles message routing
+- 将拦截器注入页面上下文
+- 桥接页面和扩展上下文
+- 处理消息路由
 
 #### DevTools Panel (`panel.js`)
-- Provides user interface
-- Manages recording controls
-- Displays connections and messages
-- Handles behavior management
-- Controls replay execution
+- 提供用户界面
+- 管理录制控制
+- 显示连接和消息
+- 处理行为管理
+- 控制回放执行
 
-## Technical Details
+## 技术细节
 
-### Message Format
+### 消息格式
 
-Messages are stored with the following structure:
+消息存储结构如下：
 
 ```javascript
 {
-  id: number,              // Unique message ID
-  type: 'send' | 'receive', // Message direction
-  data: string | ArrayBuffer, // Message content
-  timestamp: number,       // Unix timestamp
-  isBinary: boolean        // Whether message is binary
+  connectionId: string,      // 连接 ID
+  direction: 'send',         // 消息方向（目前仅支持 send）
+  data: string | ArrayBuffer,// 消息内容
+  dataType: 'text'|'json'|'binary', // 数据类型
+  timestamp: number,         // Unix 时间戳
+  relativeTime: number,      // 相对于录制开始的毫秒数
+  url: string,               // WebSocket URL
+  size: number               // 消息大小（字节）
 }
 ```
 
-### Storage
+### 存储
 
-All data is persisted using `chrome.storage.local`:
-- **connections**: Active WebSocket connections
-- **messages**: Recorded message arrays
-- **behaviors**: Saved behavior configurations
-- **recordingState**: Current recording status
+所有数据使用 `chrome.storage.local` 持久化：
+- **connections**: 活动的 WebSocket 连接
+- **messages**: 录制的消息数组
+- **behaviors**: 保存的行为配置
+- **recordingFilterSettings**: 录制过滤设置
+- **wss_recorder_state**: 录制状态（用于 Service Worker 恢复）
 
-### Replay Algorithm
+### 回放算法
 
-1. Load behavior configuration
-2. Establish new WebSocket connection
-3. For each repeat iteration:
-   - Send/receive messages in sequence
-   - Wait for configured interval (except after last iteration)
-   - Update progress display
-4. Report completion status
+1. 加载行为配置
+2. 建立新的 WebSocket 连接（或使用页面现有连接）
+3. 对于每次重复迭代：
+   - 按顺序发送消息
+   - 等待配置的间隔（最后一次迭代后不等待）
+   - 更新进度显示
+4. 报告完成状态
 
-### Time Estimation Formula
+### 时间估算公式
 
 ```
-Total Time = (Message Count × 50ms × Repeat Count) + (Interval × (Repeat Count - 1))
+总耗时 = (消息序列实际间隔 × 重复次数) + (回放间隔 × (重复次数 - 1))
 ```
 
-- Assumes ~50ms per message processing
-- Interval only applies between repeats (not after final repeat)
-- Auto-formats to ms/seconds/minutes/hours based on duration
+- 使用消息的实际时间间隔进行计算
+- 间隔仅在重复之间应用（最后一次后无间隔）
+- 自动格式化为毫秒/秒/分钟/小时
 
-## Development
+## 开发
 
-### Prerequisites
+### 前置条件
 
-- Node.js (for icon generation)
-- Chrome browser
-- Basic understanding of Chrome Extensions
+- Node.js（用于图标生成）
+- Chrome 浏览器
+- 了解 Chrome 扩展开发基础
 
-### Generating Icons
+### 生成图标
 
 ```bash
 node generate-icons.js
 ```
 
-This creates PNG icons in multiple sizes from the SVG source.
+这将从 SVG 源创建多个尺寸的 PNG 图标。
 
-### Debugging
+### 调试
 
 1. **Service Worker**: 
-   - Go to `chrome://extensions/`
-   - Click "Inspect views: service worker"
+   - 访问 `chrome://extensions/`
+   - 点击"Inspect views: service worker"
    
-2. **DevTools Panel**:
-   - Right-click the panel
-   - Select "Inspect"
+2. **DevTools 面板**:
+   - 右键点击面板
+   - 选择"检查"
 
 3. **Content Script**:
-   - Open page DevTools
-   - Check Console tab
+   - 打开页面 DevTools
+   - 查看 Console 标签页
 
-## Permissions
+## 权限说明
 
-The extension requires the following permissions:
+扩展需要以下权限：
 
-- **storage**: Save behaviors and settings
-- **webRequest**: Monitor WebSocket connections
-- **activeTab**: Access current tab for injection
-- **tabs**: Manage browser tabs
-- **scripting**: Inject content scripts
-- **<all_urls>**: Intercept WebSocket on any website
+- **storage**: 保存行为和设置
+- **webRequest**: 监控 WebSocket 连接
+- **activeTab**: 访问当前标签页进行注入
+- **tabs**: 管理浏览器标签页
+- **scripting**: 注入内容脚本
+- **<all_urls>**: 在任何网站上拦截 WebSocket
 
-## Use Cases
+## 使用场景
 
-### Device Control Automation
-- Record device control commands
-- Replay sequences for testing
-- Automate repetitive control tasks
+### 设备群控自动化
+- 录制设备控制命令
+- 回放序列进行测试
+- 自动化重复控制任务
 
-### API Testing
-- Capture WebSocket API interactions
-- Replay for regression testing
-- Validate message formats
+### API 测试
+- 捕获 WebSocket API 交互
+- 回放进行回归测试
+- 验证消息格式
 
-### Debugging
-- Inspect WebSocket traffic
-- Analyze message patterns
-- Identify communication issues
+### 调试分析
+- 检查 WebSocket 流量
+- 分析消息模式
+- 识别通信问题
 
-### Documentation
-- Export scripts for team sharing
-- Document API workflows
-- Create reproducible test cases
+### 文档生成
+- 导出脚本供团队共享
+- 记录 API 工作流程
+- 创建可重现的测试用例
 
-## Tips & Best Practices
+## 技巧与最佳实践
 
-### Recording
-- Stop recording when done to avoid capturing unnecessary messages
-- Name behaviors descriptively for easy identification
-- Review messages before saving to remove noise
+### 录制
+- 完成后停止录制，避免捕获不必要的消息
+- 使用描述性名称命名行为，便于识别
+- 保存前查看消息，移除噪声
 
-### Replaying
-- Test with single repeat first before bulk replay
-- Use intervals for rate-limited APIs
-- Monitor connection status during replay
+### 回放
+- 在批量回放前先测试单次回放
+- 对速率限制的 API 使用间隔
+- 回放期间监控连接状态
 
-### Editing
-- Validate binary data format before saving
-- Keep message sequences logical and complete
-- Backup important behaviors via export
+### 编辑
+- 保存前验证二进制数据格式
+- 保持消息序列逻辑完整
+- 通过导出备份重要行为
 
-## Troubleshooting
+## 故障排除
 
-### No Connections Showing
-- Ensure the page uses WebSocket
-- Refresh the page after opening DevTools
-- Check if WebSocket connections are established
+### 没有显示连接
+- 确保页面使用 WebSocket
+- 打开 DevTools 后刷新页面
+- 检查是否已建立 WebSocket 连接
 
-### Recording Not Working
-- Verify recording button is red (active)
-- Check console for errors
-- Ensure content script is injected
+### 录制不工作
+- 验证录制按钮是否为红色（激活状态）
+- 检查控制台是否有错误
+- 确保 content script 已注入
 
-### Replay Fails
-- Verify target server is accessible
-- Check connection parameters match original
-- Review error messages in status panel
+### 回放失败
+- 验证目标服务器可访问
+- 检查连接参数是否与原始匹配
+- 查看状态面板中的错误消息
 
-### Messages Not Appearing
-- Confirm correct connection is selected
-- Check if messages were filtered
-- Verify recording was active during transmission
+### 消息未显示
+- 确认选择了正确的连接
+- 检查消息是否被过滤
+- 验证传输期间录制是否激活
 
-## License
+## 许可协议
 
-MIT License - Feel free to use and modify for your needs.
+MIT 许可证 - 欢迎使用和修改以满足您的需求。
 
-## Version History
+## 版本历史
 
 ### v1.0.0
-- Initial release
-- WebSocket message recording
-- Behavior management
-- Message replay with configuration
-- Multi-format export
-- Binary message support
-- Real-time time estimation
+- 初始版本发布
+- WebSocket 消息录制
+- 行为管理
+- 带配置的消息回放
+- 多格式导出
+- 二进制消息支持
+- 实时时间估算
+- 录制过滤设置（关键词、类型、URL 模式）
+- 连接筛选和选择
+- 消息编辑功能
+- 行为导入/导出

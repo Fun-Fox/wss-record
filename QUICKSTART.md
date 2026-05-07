@@ -1,181 +1,181 @@
-# Quick Start Guide - WSS Recorder
+# 快速入门指南 - 行为录制回放
 
-## Installation (30 seconds)
+## 安装（30 秒）
 
-1. **Load Extension**
-   - Open Chrome → `chrome://extensions/`
-   - Enable "Developer mode"
-   - Click "Load unpacked"
-   - Select the `wss-proxy` folder
+1. **加载扩展**
+   - 打开 Chrome → `chrome://extensions/`
+   - 启用"开发者模式"
+   - 点击"加载已解压的扩展程序"
+   - 选择 `wss-record` 文件夹
 
-2. **Verify**
-   - You should see the 📡 icon in your toolbar
-   - Click it to see the popup
+2. **验证安装**
+   - 你应该在工具栏中看到 📡 图标
+   - 点击它查看弹窗
 
-## First Recording (2 minutes)
+## 第一次录制（2 分钟）
 
-### Step 1: Open DevTools
-- Go to any website with WebSocket (e.g., a chat app, trading platform)
-- Press `F12` or right-click → "Inspect"
+### 第 1 步：打开 DevTools
+- 访问任何包含 WebSocket 的网站（例如：聊天应用、交易平台）
+- 按 `F12` 或右键点击 → "检查"
 
-### Step 2: Find WSS Panel
-- Look for the **"WSS Panel"** tab in DevTools
-- Click to activate it
+### 第 2 步：找到行为录制回放面板
+- 在 DevTools 中查找 **"行为录制回放"** 标签页
+- 点击激活它
 
-### Step 3: Start Recording
-- Click the red **Record** button 🔴
-- The status should show "Recording..."
-- Interact with the webpage (send messages, click buttons, etc.)
+### 第 3 步：开始录制
+- 点击红色的 **录制** 按钮 🔴
+- 状态应显示"录制中..."
+- 与网页交互（发送消息、点击按钮等）
 
-### Step 4: Stop & Save
-- Click the Record button again to stop ⏹️
-- Click **"Save Behavior"**
-- Enter a name (e.g., "Login Sequence")
-- Click **"Save"**
+### 第 4 步：停止并保存
+- 再次点击录制按钮停止 ⏹️
+- 点击 **"保存行为"**
+- 输入名称（例如："登录流程"）
+- 点击 **"保存"**
 
-## Replay Your First Behavior (1 minute)
+## 回放你的第一个行为（1 分钟）
 
-### Step 1: Navigate to Behaviors
-- Click the **"Behaviors"** tab
-- Find your saved behavior
+### 第 1 步：导航到行为
+- 点击 **"行为"** 标签页
+- 找到已保存的行为
 
-### Step 2: Configure Replay
-- Click **"Replay"** button
-- Set options:
-  - **Repeat Count**: How many times? (try 3)
-  - **Replay Interval**: Wait between replays? (try 2 seconds)
-  - Watch the **Estimated Time** update automatically
+### 第 2 步：配置回放
+- 点击 **"回放"** 按钮
+- 设置选项：
+  - **重复次数**: 回放多少次？（尝试 3 次）
+  - **回放间隔**: 回放之间等待多久？（尝试 2 秒）
+  - 观察 **估算时间** 自动更新
 
-### Step 3: Execute
-- Click **"Start Replay"**
-- Watch the progress panel
-- See messages being sent/received in real-time
+### 第 3 步：执行
+- 点击 **"开始回放"**
+- 查看进度面板
+- 实时查看消息发送/接收
 
-## Edit Messages (Optional)
+## 编辑消息（可选）
 
-### Edit Text Message
-1. Click **"View Details"** on a behavior
-2. Find a message you want to change
-3. Click the **Edit** button (✏️)
-4. Modify the text
-5. Click **"Save"**
+### 编辑文本消息
+1. 点击行为上的 **"查看详情"**
+2. 找到想要修改的消息
+3. 点击 **编辑** 按钮（✏️）
+4. 修改文本
+5. 点击 **"保存"**
 
-### Edit Binary Message
-1. Same as above, but for binary messages
-2. Edit in hexadecimal format
-3. Ensure valid hex characters (0-9, A-F)
-4. Click **"Save"**
+### 编辑二进制消息
+1. 同上，但针对二进制消息
+2. 以十六进制格式编辑
+3. 确保使用有效的十六进制字符（0-9, A-F）
+4. 点击 **"保存"**
 
-## Export Scripts
+## 导出脚本
 
-### Node.js Export
-1. Go to **Behaviors** tab
-2. Click **"Export"** on a behavior
-3. Select **"Node.js Script"**
-4. Download the `.js` file
-5. Run with: `node your-script.js`
+### Node.js 导出
+1. 进入 **行为** 标签页
+2. 点击行为上的 **"导出"**
+3. 选择 **"Node.js 脚本"**
+4. 下载 `.js` 文件
+5. 运行：`node your-script.js`
 
-### Python Export
-1. Same steps as above
-2. Select **"Python Script"**
-3. Download the `.py` file
-4. Run with: `python your-script.py`
+### Python 导出
+1. 同上
+2. 选择 **"Python 脚本"**
+3. 下载 `.py` 文件
+4. 运行：`python your-script.py`
 
-## Common Workflows
+## 常见工作流
 
-### Workflow 1: Test Automation
+### 工作流 1：测试自动化
 ```
-1. Record user actions → Save as "Test Scenario 1"
-2. Set repeat count to 10
-3. Set interval to 5 seconds
-4. Click replay → Automated testing!
-```
-
-### Workflow 2: API Documentation
-```
-1. Record API calls → Save as "API Flow"
-2. Export as Node.js script
-3. Share with team members
-4. They can replay to understand the flow
+1. 录制用户操作 → 保存为"测试场景 1"
+2. 设置重复次数为 10
+3. 设置间隔为 5 秒
+4. 点击回放 → 自动化测试！
 ```
 
-### Workflow 3: Debug Analysis
+### 工作流 2：API 文档
 ```
-1. Record problematic interactions
-2. Review messages in detail view
-3. Identify patterns or errors
-4. Edit messages to test fixes
-5. Replay modified sequence
+1. 录制 API 调用 → 保存为"API 流程"
+2. 导出为 Node.js 脚本
+3. 与团队成员分享
+4. 他们可以回放以理解流程
 ```
 
-## Tips & Tricks
+### 工作流 3：调试分析
+```
+1. 录制有问题的交互
+2. 在详情视图中查看消息
+3. 识别模式或错误
+4. 编辑消息测试修复方案
+5. 回放修改后的序列
+```
 
-### 💡 Pro Tips
+## 技巧与窍门
 
-1. **Name Behaviors Clearly**
-   - Good: "User Login Flow"
-   - Bad: "Behavior 1"
+###  专业技巧
 
-2. **Clean Up Before Saving**
-   - Delete irrelevant messages
-   - Keep only essential sequences
+1. **清晰命名行为**
+   - 好的："用户登录流程"
+   - 差的："行为 1"
 
-3. **Use Intervals Wisely**
-   - Rate-limited APIs: Add 1-2 second intervals
-   - Real-time apps: Use 0 interval
-   - Load testing: Use short intervals (0.1s)
+2. **保存前清理**
+   - 删除不相关的消息
+   - 仅保留必要的序列
 
-4. **Test Single Repeat First**
-   - Always try 1 repeat before bulk replay
-   - Verify everything works correctly
+3. **明智使用间隔**
+   - 速率限制的 API：添加 1-2 秒间隔
+   - 实时应用：使用 0 间隔
+   - 负载测试：使用短间隔（0.1 秒）
 
-5. **Backup Important Behaviors**
-   - Export behaviors regularly
-   - Store JSON exports safely
+4. **先测试单次回放**
+   - 在批量回放前总是先尝试 1 次重复
+   - 验证一切正常工作
 
-### ⚠️ Common Pitfalls
+5. **备份重要行为**
+   - 定期导出行为
+   - 安全存储 JSON 导出文件
 
-1. **No Connections Showing?**
-   - Refresh the page after opening DevTools
-   - Ensure WebSocket connections exist
+### ️ 常见陷阱
 
-2. **Recording Not Capturing?**
-   - Check if button is red (active)
-   - Verify correct connection selected
+1. **没有显示连接？**
+   - 打开 DevTools 后刷新页面
+   - 确保存在 WebSocket 连接
 
-3. **Replay Failing?**
-   - Server might be down
-   - Connection parameters changed
-   - Check error messages in status panel
+2. **录制未捕获消息？**
+   - 检查按钮是否为红色（激活状态）
+   - 验证选择了正确的连接
 
-4. **Binary Data Errors?**
-   - Ensure valid hex format
-   - No spaces or special characters
-   - Even number of characters
+3. **回放失败？**
+   - 服务器可能已宕机
+   - 连接参数已更改
+   - 检查状态面板中的错误消息
 
-## Keyboard Shortcuts
+4. **二进制数据错误？**
+   - 确保使用有效的十六进制格式
+   - 无空格或特殊字符
+   - 偶数个字符
 
-| Action | Shortcut |
+## 键盘快捷键
+
+| 操作 | 快捷键 |
 |--------|----------|
-| Open DevTools | `F12` or `Ctrl+Shift+I` |
-| Close DevTools | `Esc` |
-| Switch Panels | `Ctrl+]` / `Ctrl+[` |
+| 打开 DevTools | `F12` 或 `Ctrl+Shift+I` |
+| 关闭 DevTools | `Esc` |
+| 切换面板 | `Ctrl+]` / `Ctrl+[` |
 
-## Next Steps
+## 下一步
 
-- ✅ Try recording different types of interactions
-- ✅ Experiment with various replay configurations
-- ✅ Export and run scripts outside Chrome
-- ✅ Share behaviors with your team
-- ✅ Create a library of common sequences
+- ✅ 尝试录制不同类型的交互
+- ✅ 实验各种回放配置
+- ✅ 在 Chrome 外导出和运行脚本
+- ✅ 与团队分享行为
+- ✅ 创建常用序列库
 
-## Need Help?
+## 需要帮助？
 
-- Check the full [README.md](README.md) for detailed documentation
-- Review [FEATURES.md](FEATURES.md) for complete feature list
-- Inspect console logs for debugging information
-- Check Chrome extension errors at `chrome://extensions/`
+- 查看完整的 [README.md](README.md) 获取详细文档
+- 查看 [FEATURES.md](FEATURES.md) 获取完整功能列表
+- 检查控制台日志进行调试
+- 在 `chrome://extensions/` 查看 Chrome 扩展错误
 
 ---
 
-**Happy Recording! 🎯**
+**录制愉快！🎯**

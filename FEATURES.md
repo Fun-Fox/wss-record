@@ -1,16 +1,17 @@
-# WSS Recorder - 功能说明
+# 功能特性 - 行为录制回放
 
 ## 插件名称
-- **扩展名称**: WSS Recorder
-- **DevTools面板**: WSS Panel
+- **扩展名称**: 行为录制回放
+- **DevTools面板**: 行为录制回放
 
 ## 核心功能
 
 ### 1. WebSocket 消息录制
-- ✅ 实时捕获所有 WebSocket 发送/接收消息
+- ✅ 实时捕获所有 WebSocket 发送消息
 - ✅ 支持选择特定连接进行录制
 - ✅ 实时消息计数器
 - ✅ 连接状态可视化指示
+- ✅ 录制过滤设置（关键词、类型、URL模式）
 
 ### 2. 行为管理
 - ✅ 保存录制的消息序列为可重用行为
@@ -18,13 +19,15 @@
 - ✅ 删除不需要的消息
 - ✅ 清空整个行为
 - ✅ 导入/导出行为为 JSON
+- ✅ 行为详情查看与编辑
 
 ### 3. 消息回放
 - ✅ **回放次数**: 设置回放重复次数（1-100次）
 - ✅ **回放间隔**: 配置每次回放之间的等待时间（0-3600秒，支持小数）
-- ✅ **时间估算**: 自动计算总回放时长
+- ✅ **时间估算**: 自动计算总回放时长（基于消息实际时间间隔）
 - ✅ 实时更新估算时间
 - ✅ 回放进度显示
+- ✅ 回放日志记录
 
 ### 4. 消息编辑
 - ✅ 文本消息编辑器，带验证
@@ -39,12 +42,13 @@
 
 ## 界面组件
 
-### DevTools 面板 (WSS Panel)
+### DevTools 面板（行为录制回放）
 - 🎨 深色主题界面
 - 📋 连接列表，带状态指示器
 - 📊 消息时间线视图
 - 🔧 行为详情模态框
 - 📈 回放状态面板
+- ⚙️ 录制过滤设置面板
 
 ### Popup 弹窗
 - ⚡ 快速访问扩展状态
@@ -56,25 +60,34 @@
 ### 数据存储
 - 使用 `chrome.storage.local` 持久化存储
 - 连接信息、消息记录、行为配置全部本地保存
+- Service Worker 状态自动恢复机制
 
 ### 回放算法
 ```
-总耗时 = (消息数 × 50ms × 回放次数) + (间隔时间 × (回放次数 - 1))
+总耗时 = (消息序列实际间隔 × 回放次数) + (回放间隔 × (回放次数 - 1))
 ```
-- 假设每条消息处理约 50ms
+- 使用消息的实际时间间隔进行计算
 - 间隔仅在重复之间应用（最后一次后无间隔）
 - 自动格式化显示（毫秒/秒/分钟/小时）
 
 ### 消息格式
 ```javascript
 {
-  id: number,              // 唯一消息ID
-  type: 'send' | 'receive', // 消息方向
-  data: string | ArrayBuffer, // 消息内容
-  timestamp: number,       // Unix时间戳
-  isBinary: boolean        // 是否为二进制消息
+  connectionId: string,      // 连接 ID
+  direction: 'send',         // 消息方向（目前仅支持 send）
+  data: string | ArrayBuffer,// 消息内容
+  dataType: 'text'|'json'|'binary', // 数据类型
+  timestamp: number,         // Unix 时间戳
+  relativeTime: number,      // 相对于录制开始的毫秒数
+  url: string,               // WebSocket URL
+  size: number               // 消息大小（字节）
 }
 ```
+
+### 录制过滤系统
+- **关键词过滤**: 按消息内容关键词筛选
+- **类型过滤**: 选择要录制的消息类型（文本/JSON/二进制）
+- **URL 模式过滤**: 按 WebSocket URL 模式筛选连接
 
 ## 使用场景
 
@@ -101,7 +114,7 @@
 ## 架构结构
 
 ```
-wss-proxy/
+wss-record/
 ├── manifest.json              # 扩展清单
 ├── src/
 │   ├── background/
@@ -119,9 +132,6 @@ wss-proxy/
 │   │   ├── popup.html         # 弹窗 UI
 │   │   └── popup.js           # 弹窗逻辑
 │   └── icons/                 # 扩展图标
-├── templates/
-│   ├── node-ws-script.js      # Node.js 导出模板
-│   └── python-websocket-script.py  # Python 导出模板
 └── generate-icons.js          # 图标生成脚本
 ```
 
@@ -144,3 +154,9 @@ wss-proxy/
 - ✨ 多格式导出
 - ✨ 二进制消息支持
 - ✨ 实时时间估算
+- ✨ 录制过滤设置（关键词、类型、URL 模式）
+- ✨ 连接筛选和选择
+- ✨ 消息编辑功能
+- ✨ 行为导入/导出
+- ✨ Service Worker 状态恢复
+- ✨ 错误处理优化（chrome.runtime.lastError 检查）

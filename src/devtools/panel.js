@@ -346,11 +346,51 @@
       }
 
       const tabId = tabs[0].id;
+      const tabUrl = tabs[0].url;
+
+      // 检查是否是有效的 URL（不能是 chrome://、edge:// 等特殊页面）
+      if (!tabUrl || tabUrl.startsWith('chrome://') || tabUrl.startsWith('edge://') || 
+          tabUrl.startsWith('about:') || tabUrl.startsWith('data:')) {
+        showToast('当前页面不支持录制，请打开普通网页', 'error');
+        return;
+      }
 
       // 通过 content script 获取页面中的 WebSocket 连接
       chrome.tabs.sendMessage(tabId, {
         type: 'GET_WEBSOCKET_CONNECTIONS'
       }, (response) => {
+        // 检查是否有错误（如 content script 未加载）
+        if (chrome.runtime.lastError) {
+          console.error('[Panel] Failed to send message to content script:', chrome.runtime.lastError.message);
+          
+          // 尝试注入 content script
+          chrome.scripting.executeScript({
+            target: { tabId },
+            files: ['src/content/content-script.js']
+          }).then(() => {
+            // 注入成功后重试
+            chrome.tabs.sendMessage(tabId, {
+              type: 'GET_WEBSOCKET_CONNECTIONS'
+            }, (retryResponse) => {
+              if (chrome.runtime.lastError) {
+                showToast('无法与页面通信，请刷新页面后重试', 'error');
+                return;
+              }
+              
+              if (retryResponse && retryResponse.success && retryResponse.connections && retryResponse.connections.length > 0) {
+                renderConnectionRadioList(retryResponse.connections);
+                openModal('selectConnectionModal');
+              } else {
+                showToast('当前页面没有活动的 WebSocket 连接，请先打开目标页面', 'error');
+              }
+            });
+          }).catch(err => {
+            console.error('[Panel] Failed to inject content script:', err);
+            showToast('无法注入脚本，请确保在普通网页中使用', 'error');
+          });
+          return;
+        }
+        
         if (response && response.success && response.connections && response.connections.length > 0) {
           renderConnectionRadioList(response.connections);
           openModal('selectConnectionModal');

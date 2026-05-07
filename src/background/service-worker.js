@@ -896,6 +896,13 @@ function replaySendMessage(payload, sendResponse) {
     type: 'REPLAY_INJECT_MESSAGE',
     payload: { message, connectionId }
   }).then((response) => {
+    // 检查是否有错误
+    if (chrome.runtime.lastError) {
+      console.error('[Replay] Error sending message to tab:', chrome.runtime.lastError.message);
+      sendResponse({ success: false, error: '无法与页面通信: ' + chrome.runtime.lastError.message });
+      return;
+    }
+    
     if (response?.success) {
       sendResponse({ success: true, response });
       return;
@@ -905,7 +912,8 @@ function replaySendMessage(payload, sendResponse) {
       error: response?.error || 'Replay message injection failed'
     });
   }).catch(err => {
-    sendResponse({ success: false, error: err.message });
+    console.error('[Replay] Failed to send message:', err);
+    sendResponse({ success: false, error: '发送失败: ' + err.message });
   });
 }
 
@@ -1070,13 +1078,16 @@ function replayBehavior(payload, sendResponse) {
       }
       
       const activeTabId = tabs[0].id;
+      const activeTabUrl = tabs[0].url;
+      
       console.log('[Replay] Sending replay to active tab:', activeTabId);
       
       // 直接发送到当前活动标签页
       chrome.tabs.sendMessage(activeTabId, messagePayload, (response) => {
+        // 检查是否有错误
         if (chrome.runtime.lastError) {
           console.error('[Replay] Error sending to active tab:', chrome.runtime.lastError.message);
-          sendResponse({ success: false, error: chrome.runtime.lastError.message });
+          sendResponse({ success: false, error: '无法与页面通信: ' + chrome.runtime.lastError.message });
         } else {
           console.log('[Replay] Active tab response:', response);
           sendResponse(response || { success: false, error: 'No response' });

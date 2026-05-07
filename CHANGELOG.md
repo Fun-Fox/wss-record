@@ -1,166 +1,110 @@
-# Changelog - WSS Recorder
+# 更新日志 - 行为录制回放
 
-## [1.0.0] - 2026-04-29
+## [1.0.0] - 2026-04-30
 
-### 🎉 Initial Release
+### ✨ 新增功能
 
-#### Added
-- **WebSocket Message Recording**
-  - Real-time capture of all WebSocket send/receive messages
-  - Connection filtering and selection
-  - Visual recording status indicators
-  - Real-time message counter
+#### 核心功能
+- **WebSocket 消息录制**: 实时捕获所有 WebSocket 发送消息
+- **连接筛选**: 支持选择特定的 WebSocket 连接进行录制
+- **行为管理**: 将录制的消息序列保存为可复用的行为
+- **消息回放**: 回放保存的行为，支持配置重复次数和间隔
+- **二进制消息支持**: 完整支持二进制 WebSocket 消息，可编辑十六进制数据
+- **多格式导出**: 将行为导出为 Node.js 或 Python 脚本
 
-- **Behavior Management System**
-  - Save recorded sequences as named behaviors
-  - Edit individual messages (text and binary)
-  - Delete unwanted messages
-  - Clear entire behavior
-  - Import/export behaviors as JSON
+#### 高级功能
+- **录制过滤系统**: 
+  - 关键词过滤：按消息内容关键词筛选
+  - 类型过滤：选择要录制的消息类型（文本/JSON/二进制）
+  - URL 模式过滤：按 WebSocket URL 模式筛选连接
+- **时间估算**: 基于消息实际时间间隔自动计算总回放时长
+- **消息编辑**: 支持编辑文本和二进制消息
+- **行为导入/导出**: 支持 JSON 格式的导入导出
+- **回放进度显示**: 实时显示回放进度和日志
 
-- **Advanced Replay Features**
-  - Configurable repeat count (1-100 times)
-  - Adjustable replay interval (0-3600 seconds, supports decimals)
-  - Automatic time estimation with real-time updates
-  - Progress tracking during replay
-  - Detailed status panel showing configuration
+### 🎨 界面组件
 
-- **Message Editing Capabilities**
-  - Text message editor with validation
-  - Binary message hex editor
-  - Format validation for binary data
-  - Save/cancel operations
+#### DevTools 面板
+- 深色主题界面设计
+- 连接列表，带状态指示器
+- 消息时间线视图
+- 行为详情模态框
+- 回放状态面板
+- 录制过滤设置面板
 
-- **Multi-format Export**
-  - Node.js script generation (ws library)
-  - Python script generation (websockets library)
-  - Complete connection and message logic included
+#### Popup 弹窗
+- 快速访问扩展状态
+- 录制状态指示器
+- DevTools 面板使用说明
 
-- **User Interface**
-  - Dark-themed DevTools panel (WSS Panel)
-  - Clean popup interface (WSS Recorder)
-  - Connection list with status indicators
-  - Message timeline view
-  - Behavior detail modal
-  - Replay configuration panel
+### 🔧 技术特性
 
-#### Technical Features
-- Chrome Extension Manifest V3 architecture
-- Service worker background processing
-- Content script injection for WebSocket interception
-- Local storage persistence using chrome.storage.local
-- Non-intrusive WebSocket constructor override
-- Binary message support with ArrayBuffer handling
-- Real-time communication between extension components
+#### 架构优化
+- **Service Worker 状态恢复**: Service Worker 重启后自动恢复录制状态
+- **错误处理优化**: 全面检查 `chrome.runtime.lastError`，防止未捕获错误
+- **跨 World 通信**: 使用 CustomEvent 实现 MAIN world 和 ISOLATED world 之间的通信
+- **动态脚本注入**: 当 content script 不存在时自动注入
 
-#### Documentation
-- Comprehensive README.md with full documentation
-- FEATURES.md with detailed feature list (Chinese)
-- QUICKSTART.md with step-by-step guide
-- CHANGELOG.md (this file)
+#### 数据存储
+- 使用 `chrome.storage.local` 持久化存储
+- 连接信息、消息记录、行为配置全部本地保存
+- 高效的消息转发机制
 
-### Changed
-- Renamed extension from "设备群控 WebSocket 录制回放" to **"WSS Recorder"**
-- Renamed DevTools panel from "设备群控 WSS 录制回放" to **"WSS Panel"**
-- Updated all UI text to English for international accessibility
-- Simplified naming throughout the codebase
+#### 性能优化
+- 批量 DOM 更新
+- 防抖频繁更新
+- 最小化内存占用
 
-### Fixed
-- Message deletion UI refresh issue (corrected function name from `showBehaviorDetail` to `viewBehaviorDetail`)
-- Ensured proper state synchronization after message edits and deletions
+### 🐛 Bug 修复
 
-### Architecture
-```
-wss-proxy/
-├── manifest.json              # Extension configuration
-├── src/
-│   ├── background/
-│   │   └── service-worker.js  # Background logic & storage
-│   ├── content/
-│   │   ├── content-script.js  # Injection bridge
-│   │   └── injected-script.js # WebSocket interceptor
-│   ├── devtools/
-│   │   ├── devtools.html      # Entry point
-│   │   ├── devtools.js        # Panel registration
-│   │   ├── panel.html         # Main UI structure
-│   │   ├── panel.css          # Styling (dark theme)
-│   │   └── panel.js           # All panel logic
-│   ├── popup/
-│   │   ├── popup.html         # Popup UI
-│   │   └── popup.js           # Popup logic
-│   └── icons/                 # Extension icons (16, 48, 128px)
-├── templates/
-│   ├── node-ws-script.js      # Node.js export template
-│   └── python-websocket-script.py  # Python export template
-├── generate-icons.js          # Icon generation utility
-├── README.md                  # Main documentation
-├── FEATURES.md                # Feature overview (Chinese)
-├── QUICKSTART.md              # Quick start guide
-└── CHANGELOG.md               # Version history
-```
+- 修复在特殊页面（chrome://、edge:// 等）尝试录制时的运行时错误
+- 修复 content script 未加载时的消息发送失败问题
+- 修复 Service Worker 重启后状态丢失问题
+- 修复回放时连接不存在的错误处理
 
-### Permissions Required
-- `storage`: Persist behaviors and settings
-- `webRequest`: Monitor WebSocket connections
-- `activeTab`: Access current tab for script injection
-- `tabs`: Manage browser tabs
-- `scripting`: Inject content scripts
-- `<all_urls>`: Intercept WebSocket on any website
+### 📝 文档
 
-### Use Cases
-- Device control automation and testing
-- WebSocket API testing and validation
-- Debugging and traffic analysis
-- Documentation and knowledge sharing
-- Load testing with configurable intervals
-- Regression testing with saved behaviors
+- 完整的中文 README 文档
+- 快速入门指南 (QUICKSTART.md)
+- 功能特性说明 (FEATURES.md)
+- 项目结构说明 (PROJECT_STRUCTURE.md)
+- 详细的代码注释
 
-### Performance Notes
-- Minimal overhead when not recording
-- Efficient message storage and retrieval
-- Optimized UI rendering for large message sets
-- Smart time estimation algorithm (~50ms per message assumption)
+### 🔒 安全性
 
-### Browser Compatibility
-- Chrome 88+ (Manifest V3 support required)
-- Edge 88+ (Chromium-based)
-- Other Chromium-based browsers with Manifest V3 support
+- 严格的 Chrome 扩展 Manifest V3 CSP 策略
+- 无 eval() 使用，所有代码静态执行
+- 输入验证和输出转义
+- 权限最小化原则
+
+### 📦 技术栈
+
+- **Chrome Extension API**: storage, webRequest, activeTab, tabs, scripting
+- **Web API**: WebSocket, ArrayBuffer, postMessage, CustomEvent
+- **JavaScript**: ES6+ (const, let, arrow functions, async/await)
+- **CSS**: CSS 自定义属性, Flexbox, Grid, 动画
 
 ---
 
-## Future Roadmap
+## 版本说明
 
-### Planned Features (v1.1.0)
-- [ ] Search and filter messages within behaviors
-- [ ] Message tagging and categorization
-- [ ] Batch operations on multiple messages
-- [ ] Replay speed control (fast forward/slow motion)
-- [ ] Conditional replay based on responses
-- [ ] Variable substitution in messages
-- [ ] Environment-specific configurations
+### 兼容性
+- Chrome 浏览器 88+（Manifest V3 要求）
+- 支持所有包含 WebSocket 连接的网页
+- 不支持特殊页面（chrome://、edge://、about:、data: 等）
 
-### Under Consideration
-- [ ] Cloud sync for behaviors
-- [ ] Team collaboration features
-- [ ] Advanced analytics and statistics
-- [ ] Custom script templates
-- [ ] Integration with testing frameworks
-- [ ] Automated test case generation
-- [ ] Performance profiling tools
+### 已知限制
+- 目前仅支持录制发送（send）方向的消息
+- chrome.storage.local 有 5-10MB 的存储限制
+- 大型消息集可能需要定期清理
 
----
-
-## Credits
-
-Built with ❤️ for developers working with WebSocket applications.
-
-Special thanks to:
-- Chrome Extensions team for Manifest V3
-- WebSocket community for standards and best practices
-- All beta testers who provided valuable feedback
+### 未来计划
+- 支持接收（receive）消息录制
+- 虚拟滚动优化大型消息列表
+- 更多导出格式（Java、Go 等）
+- 云同步功能
+- 团队协作功能
 
 ---
 
-## License
-
-MIT License - See LICENSE file for details
+**注意**: 这是初始版本发布，后续版本将继续优化功能和性能。
